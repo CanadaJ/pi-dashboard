@@ -39,4 +39,15 @@ body {
 
 .widget-content {
 	padding-top: 15px;
+	color: white;
+}
+
+.diskWidget .widget-content {
+	font-family: "Lucida Console", Monaco, monospace;
+}
+
+pre.prettify{
+	width: auto;
+	overflow: auto;
+	max-height: 200px;
 }
