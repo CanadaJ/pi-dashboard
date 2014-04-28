@@ -34,5 +34,27 @@ app.get('/api/temp', function(req, res) {
 	});	
 });
 
+app.get('/api/net', function(req, res) {
+	exec("ls /sys/class/net | sed -e 's/^\\(.*\\)$/\\1/'", function(error, stdout, stderr) {
+		if(error !== null) {
+			res.send(stderr);
+		} else {
+			var ifaces = stdout.split('\n');
+			ifaces.pop();
+			res.send(ifaces);
+		}
+	} )
+})
+
+app.get('/api/net/:id', function(req, res) {
+	exec('ifconfig ' + req.params.id, function(error, stdout, stderr) {
+		if(error !== null) {
+			res.send(stderr);
+		} else {
+			res.send({name: req.params.id, data: stdout});
+		}
+	});
+});
+
 app.listen(process.env.PORT || 3000);
 console.log('listening on 3000');
