@@ -14,6 +14,13 @@ $(function() {
 	});
 
 	$.ajax({
+		url: '/api/net/all',
+		success: function(data) {
+			$('.net-pre').text(data);
+		}
+	});
+
+/*	$.ajax({
 		url: '/api/net',
 		success: function(data) {
 			for(var i = 0; i < data.length; i++) {
@@ -28,5 +35,6 @@ $(function() {
 			}
 			$('.net-tabs a:last').tab('show');
 		}
-	});
+	});*/
+	
 });

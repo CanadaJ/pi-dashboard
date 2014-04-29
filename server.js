@@ -21,14 +21,15 @@ app.get('/api/temp', function(req, res) {
 		if(error !== null) {
 			cpu_temp = stderr;
 		} else {
-			cpu_temp = 'CPU Temp: ' + (stdout/100 % stdout/1000)
+			cpu_temp = 'CPU Temp: ' + ((stdout - (stdout % 10)) / 1000);
 		}
-		exec('/opt/vc/bin/vcgencmd measure_temp', function(error, stdout, stderr) {
+		exec('/opt/vc/bin/vcgencmd measure_temp | cut -c6-9', function(error, stdout, stderr) {
 			if(error !== null) {
 				gpu_temp = stderr;
 			} else {
 				gpu_temp = 'GPU Temp: ' + stdout;
 			}
+			console.log(cpu_temp);
 			res.send(cpu_temp + '\n' + gpu_temp);
 		});
 	});	
@@ -45,6 +46,16 @@ app.get('/api/net', function(req, res) {
 		}
 	} )
 })
+
+app.get('/api/net/all', function(req, res) {
+	exec('ifconfig', function(error, stdout, stderr) {
+		if(error !== null) {
+			res.send(stderr);
+		} else {
+			res.send(stdout);
+		}
+	});
+});
 
 app.get('/api/net/:id', function(req, res) {
 	exec('ifconfig ' + req.params.id, function(error, stdout, stderr) {
