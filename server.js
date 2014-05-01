@@ -10,7 +10,7 @@ app.use(express.static(__dirname+ '/public'));
 
 app.get('/api/disk', function(req, res) {
 	exec('df -h', function(error, stdout, stderr) {
-		res.send(stdout);
+		res.send({response: stdout});
 	});
 });
 
@@ -29,40 +29,17 @@ app.get('/api/temp', function(req, res) {
 			} else {
 				gpu_temp = 'GPU Temp: ' + stdout;
 			}
-			console.log(cpu_temp);
-			res.send(cpu_temp + '\n' + gpu_temp);
+			res.send({response: cpu_temp + '\n' + gpu_temp});
 		});
 	});	
 });
-
-app.get('/api/net', function(req, res) {
-	exec("ls /sys/class/net | sed -e 's/^\\(.*\\)$/\\1/'", function(error, stdout, stderr) {
-		if(error !== null) {
-			res.send(stderr);
-		} else {
-			var ifaces = stdout.split('\n');
-			ifaces.pop();
-			res.send(ifaces);
-		}
-	} )
-})
 
 app.get('/api/net/all', function(req, res) {
 	exec('ifconfig', function(error, stdout, stderr) {
 		if(error !== null) {
 			res.send(stderr);
 		} else {
-			res.send(stdout);
-		}
-	});
-});
-
-app.get('/api/net/:id', function(req, res) {
-	exec('ifconfig ' + req.params.id, function(error, stdout, stderr) {
-		if(error !== null) {
-			res.send(stderr);
-		} else {
-			res.send({name: req.params.id, data: stdout});
+			res.send({response: stdout});
 		}
 	});
 });
